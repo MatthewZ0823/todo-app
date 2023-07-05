@@ -1,5 +1,6 @@
 <script>
-  import Task from "./lib/Task.svelte";
+  import NewTaskInput from "./lib/components/NewTaskInput.svelte";
+  import Task from "./lib/components/Task.svelte";
   import { allTasks } from "./lib/stores";
 
   $: completedTasks = $allTasks.filter(task => task.completed);
@@ -19,6 +20,8 @@
 
 <h1 class='text-4xl text-slate-100 font-bold'> TODO List: </h1>
 <hr class='my-4 bg-orange-400 h-1 w-20 border-none'/>
+
+<NewTaskInput />
 
 {#each incompleteTasks as task (task.id)}
   <Task
