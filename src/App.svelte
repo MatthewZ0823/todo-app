@@ -2,7 +2,10 @@
   import { flip } from 'svelte/animate';
   import NewTaskInput from "./lib/components/NewTaskInput.svelte";
   import Task from "./lib/components/Task.svelte";
+  import completeTaskAudioFile from './assets/audio/complete-task.wav';
   import { allTasks } from "./lib/stores";
+
+  const completeTaskAudio = new Audio(completeTaskAudioFile);
 
   $: completedTasks = $allTasks.filter(task => task.completed);
   $: incompleteTasks = $allTasks.filter(task => !task.completed);
@@ -12,6 +15,8 @@
       return tasks.map((task) => {
         if (task.id === taskId) {
           task.completed = !task.completed;
+          
+          if (task.completed) completeTaskAudio.play();
         }
         return task;
       });

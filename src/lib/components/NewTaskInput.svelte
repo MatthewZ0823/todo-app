@@ -13,6 +13,8 @@
   let underlineEl;
 
   const onClick = () => {
+    if (input === '') return;
+
     allTasks.update((tasks) => {
       return [...tasks, {
         title: input,
@@ -22,6 +24,10 @@
     });
 
     input = '';
+  }
+
+  const onKeyDown = ({ key }) => {
+    if (key === 'Enter') onClick();
   }
 
   $: if (underlineEl) underlineEl.style.opacity = $underlineOpacity;
@@ -48,6 +54,7 @@
       bind:this={inputEl}
       on:focus={() => underlineOpacity.set(1)}
       on:blur={() => underlineOpacity.set(0.5)}
+      on:keydown={onKeyDown}
     />
     <hr class='bg-orange-400 h-px border-none' bind:this={underlineEl}/>
   </div>
