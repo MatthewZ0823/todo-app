@@ -7,7 +7,7 @@
   $: completedTasks = $allTasks.filter(task => task.completed);
   $: incompleteTasks = $allTasks.filter(task => !task.completed);
 
-  const handleClick = (taskId) => {
+  const handleCompleteClick = (taskId) => {
     allTasks.update((tasks) => {
       return tasks.map((task) => {
         if (task.id === taskId) {
@@ -17,6 +17,12 @@
       });
     });
   };
+
+  const handleDeleteClick = (taskId) => {
+    allTasks.update((tasks) => {
+      return tasks.filter((task) => task.id !== taskId);
+    });
+  }
 </script>
 
 <h1 class='text-4xl text-slate-100 font-bold'> TODO List: </h1>
@@ -28,7 +34,8 @@
   <div animate:flip>
     <Task
       task={task}
-      onClick={handleClick}
+      onCompleteClick={handleCompleteClick}
+      onDeleteClick={handleDeleteClick}
     />
   </div>
 {/each}
@@ -39,7 +46,8 @@
   <div animate:flip>
     <Task
       task={task}
-      onClick={handleClick}
+      onCompleteClick={handleCompleteClick}
+      onDeleteClick={handleDeleteClick}
     />
   </div>
 {/each}
