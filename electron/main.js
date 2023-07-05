@@ -1,8 +1,20 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
+const Store = require('./store.js');
+
+const store = new Store({
+  configName: 'todo-list',
+  defaults: {
+    todos: []
+  }
+});
 
 const loadURL = serve({ directory: 'dist' });
+
+const handleReadTodos = async () => {
+  return store.get('todos');
+};
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
@@ -12,6 +24,12 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   });
+
+  ipcMain.on('write-todos', (_event, todoList) => {
+    store.set('todos', todoList);
+  });
+
+  ipcMain.handle('read-todos', handleReadTodos);
 
   // Check if in development
   if (!app.isPackaged) { 

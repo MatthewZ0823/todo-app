@@ -4,18 +4,34 @@
   import Task from "./lib/components/Task.svelte";
   import completeTaskAudioFile from './assets/audio/complete-task.wav';
   import { allTasks } from "./lib/stores";
+  import { onMount } from 'svelte';
+
+  let loaded = false;
 
   const completeTaskAudio = new Audio(completeTaskAudioFile);
 
+  onMount(async () => {
+    // @ts-ignore
+    allTasks.set(await window.electronAPI.readTodos());
+    loaded = true;
+  })
+
   $: completedTasks = $allTasks.filter(task => task.completed);
   $: incompleteTasks = $allTasks.filter(task => !task.completed);
+
+  $: try {
+    // @ts-ignore
+    if (loaded) window.electronAPI.writeTodos($allTasks);
+  } catch (e) {   
+    console.error('Unable to write todo list to file \n' + e);
+  }
 
   const handleCompleteClick = (taskId) => {
     allTasks.update((tasks) => {
       return tasks.map((task) => {
         if (task.id === taskId) {
           task.completed = !task.completed;
-          
+
           if (task.completed) completeTaskAudio.play();
         }
         return task;
