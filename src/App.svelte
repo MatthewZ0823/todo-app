@@ -1,4 +1,5 @@
 <script>
+  import { flip } from 'svelte/animate';
   import NewTaskInput from "./lib/components/NewTaskInput.svelte";
   import Task from "./lib/components/Task.svelte";
   import { allTasks } from "./lib/stores";
@@ -24,17 +25,21 @@
 <NewTaskInput />
 
 {#each incompleteTasks as task (task.id)}
-  <Task
-    task={task}
-    onClick={handleClick}
-  />
+  <div animate:flip>
+    <Task
+      task={task}
+      onClick={handleClick}
+    />
+  </div>
 {/each}
 
 <h2 class='mt-2 text-xl text-slate-300 font-bold'> Completed Tasks: </h2>
 
 {#each completedTasks as task (task.id)}
-  <Task
-    task={task}
-    onClick={handleClick}
-  />
+  <div animate:flip>
+    <Task
+      task={task}
+      onClick={handleClick}
+    />
+  </div>
 {/each}
