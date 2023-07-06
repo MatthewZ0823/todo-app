@@ -12,7 +12,7 @@
   let underlineWidth = tweened(0, { duration: 100 });
   let underlineEl;
 
-  const onClick = () => {
+  const handleClick = () => {
     if (input === '') return;
 
     allTasks.update((tasks) => {
@@ -27,8 +27,8 @@
     input = '';
   }
 
-  const onKeyDown = ({ key }) => {
-    if (key === 'Enter') onClick();
+  const handleKeyDown = ({ key }) => {
+    if (key === 'Enter') handleClick();
   }
 
   $: if (underlineEl) underlineEl.style.opacity = $underlineOpacity;
@@ -39,7 +39,7 @@
 <div class='flex flex-row items-center'> 
   <button 
     class='mx-2 w-6 h-6'
-    on:click={onClick}
+    on:click={handleClick}
   >
     <span class='flex justify-center'>
       <img src={plusButtonImage} alt='Plus Button' class='w-4 h-4'>
@@ -55,9 +55,9 @@
       bind:this={inputEl}
       on:focus={() => underlineOpacity.set(1)}
       on:blur={() => underlineOpacity.set(0.5)}
-      on:keydown={onKeyDown}
+      on:keydown={handleKeyDown}
     />
-    <hr class='bg-orange-400 h-px border-none' bind:this={underlineEl}/>
+    <hr class='bg-orange-400 h-px border-none mb-1' bind:this={underlineEl}/>
   </div>
 </div>
 

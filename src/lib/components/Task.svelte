@@ -3,7 +3,6 @@
   import { quintOut } from 'svelte/easing';
   import { allTasks } from "../stores.js";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
-  import plusButtonImage from '../../assets/imgs/gray-plus-symbol-button.svg';
   import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
   import Subtask from './Subtask.svelte';
   import { v4 as uuidv4 } from 'uuid';
@@ -11,6 +10,7 @@
   export let task;
 
   let hovering = false;
+  let editing = false;
 
   const completeTaskAudio = new Audio(completeTaskAudioFile);
 
@@ -58,6 +58,22 @@
     });
   };
 
+  /**
+   * If the enter key pressed in the text input, turn editing mode off
+   */
+  const handleKeyDown = ({ key }) => {
+    if (key === 'Enter') {
+      editing = false;
+    }
+  };
+  
+  /**
+   * Focus the input element on creation
+   */
+  const init = (el) => {
+    el.focus();
+  };
+
   const [send, receive] = crossfade({
 		duration: (d) => Math.sqrt(d * 200),
 
@@ -78,32 +94,52 @@
 </script>
 
 <div
-  class='flex flex-col'
+  class='py-1 flex flex-col hover:bg-[#202021] hover:rounded-md hover:px-2'
   in:receive={{key: task.id}} 
   out:send={{key: task.id}}
 >
   <div 
-    class='py-1 flex flex-row items-center w-fit' 
+    class='flex flex-row items-center w-full' 
     on:mouseenter={() => hovering = true}
     on:mouseleave={() => hovering = false}
   >
-    <button class='mx-2 w-6 h-6 bg-transparent border-2 border-blue-300 rounded-md hover:animate-glow' class:selected={task.completed} on:click={handleCompleteClick}/>
-    <h1 class='text-slate-300 text-lg'>{task.title}</h1>
+    <button class='flex-shrink-0 mx-2 w-6 h-6 bg-transparent border-2 border-blue-300 rounded-md hover:animate-glow' class:selected={task.completed} on:click={handleCompleteClick}/>
+
+    {#if editing}
+    <input 
+        class='flex-grow text-slate-300 text-lg bg-transparent focus:outline-none border-b-2 border-b-red-400 border-dotted break-normal' 
+        type='text' 
+        bind:value={task.title}
+        on:keydown={handleKeyDown}
+        use:init
+      />
+    {:else}
+      <h1 class='flex-grow text-slate-300 text-lg'>{task.title}</h1>
+    {/if}
+
     <button 
-      class='ml-12 w-6 h-6 bg-orange-400 rounded-md flex flex-row justify-center items-center hover:animate-grow'
-      style:visibility={(hovering && !task.completed) ? 'visible' : 'hidden'}
+      class='flex-shrink-0 ml-12 w-6 h-6 bg-green-400 rounded-md flex flex-row justify-center items-center hover:animate-grow'
+      style:visibility={((hovering || editing) && !task.completed) ? 'visible' : 'hidden'}
       on:click={handleNewSubtaskClick}
     >
-      <img class='w-4 h-4' src={plusButtonImage} alt='New Subtask Button' />
+      ➕
     </button>
+
     <button 
-      class='mx-1 w-6 h-6 bg-red-600 rounded-md flex flex-row justify-center items-center hover:animate-wiggle'
-      style:visibility={hovering ? 'visible' : 'hidden'}
+      class='flex-shrink-0 ml-1 w-6 h-6 bg-blue-300 rounded-md flex flex-row justify-center items-center hover:animate-grow'
+      style:visibility={((hovering || editing) && !task.completed) ? 'visible' : 'hidden'}
+      on:click={() => editing = !editing}
+    >
+      ✏️
+    </button>
+
+    <button 
+      class='flex-shrink-0 mx-1 w-6 h-6 bg-red-600 rounded-md flex flex-row justify-center items-center hover:animate-wiggle'
+      style:visibility={(hovering || editing) ? 'visible' : 'hidden'}
       on:click={handleDeleteClick}
     >
       <img class='w-4 h-4' src={xButtonImage} alt='Trash Button' />
     </button>
-
   </div>
 
   {#each (task.subtasks || []) as subtask}
@@ -115,7 +151,7 @@
 </div>
 
 <style>
-  h1 {
+  input, h1 {
     font-family: 'Poppins', sans-serif;
   }
   
