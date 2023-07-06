@@ -2,13 +2,10 @@
   import { flip } from 'svelte/animate';
   import NewTaskInput from "./lib/components/NewTaskInput.svelte";
   import Task from "./lib/components/Task.svelte";
-  import completeTaskAudioFile from './assets/audio/complete-task.wav';
   import { allTasks } from "./lib/stores";
   import { onMount } from 'svelte';
 
   let loaded = false;
-
-  const completeTaskAudio = new Audio(completeTaskAudioFile);
 
   onMount(async () => {
     // @ts-ignore
@@ -25,25 +22,6 @@
   } catch (e) {   
     console.error('Unable to write todo list to file \n' + e);
   }
-
-  const handleCompleteClick = (taskId) => {
-    allTasks.update((tasks) => {
-      return tasks.map((task) => {
-        if (task.id === taskId) {
-          task.completed = !task.completed;
-
-          if (task.completed) completeTaskAudio.play();
-        }
-        return task;
-      });
-    });
-  };
-
-  const handleDeleteClick = (taskId) => {
-    allTasks.update((tasks) => {
-      return tasks.filter((task) => task.id !== taskId);
-    });
-  }
 </script>
 
 <h1 class='text-4xl text-slate-100 font-bold'> TODO List: </h1>
@@ -55,8 +33,6 @@
   <div animate:flip>
     <Task
       task={task}
-      onCompleteClick={handleCompleteClick}
-      onDeleteClick={handleDeleteClick}
     />
   </div>
 {/each}
@@ -67,8 +43,6 @@
   <div animate:flip>
     <Task
       task={task}
-      onCompleteClick={handleCompleteClick}
-      onDeleteClick={handleDeleteClick}
     />
   </div>
 {/each}

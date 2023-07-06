@@ -13,7 +13,7 @@ export default {
           '50%': { transform: 'rotate(3deg)' },
         },
         grow: {
-          '100%': { transform: 'scale(1.2)' }
+          '100%': { transform: 'scale(1.1)' }
         },
         glow: {
           '100%': { boxShadow: '0 0 5px 2px #93C5FD' }

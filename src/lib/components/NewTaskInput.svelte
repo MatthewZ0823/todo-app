@@ -19,6 +19,7 @@
       return [...tasks, {
         title: input,
         completed: false,
+        subtasks: [],
         id: uuidv4()
       }];
     });
