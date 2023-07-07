@@ -6,11 +6,13 @@
   import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
   import Subtask from './Subtask.svelte';
   import { v4 as uuidv4 } from 'uuid';
+  import ReminderButton from './ReminderButton.svelte';
 
   export let task;
 
   let hovering = false;
   let editing = false;
+  let showReminderModal = false;
 
   const completeTaskAudio = new Audio(completeTaskAudioFile);
 
@@ -106,28 +108,34 @@
     <button class='flex-shrink-0 mx-2 w-6 h-6 bg-transparent border-2 border-blue-300 rounded-md hover:animate-glow' class:selected={task.completed} on:click={handleCompleteClick}/>
 
     {#if editing}
-    <input 
-        class='flex-grow text-slate-300 text-lg bg-transparent focus:outline-none border-b-2 border-b-red-400 border-dotted break-normal' 
-        type='text' 
-        bind:value={task.title}
-        on:keydown={handleKeyDown}
-        use:init
-      />
+      <input 
+          class='flex-grow text-slate-300 text-lg bg-transparent focus:outline-none border-b-2 border-b-red-400 border-dotted break-normal' 
+          type='text' 
+          bind:value={task.title}
+          on:keydown={handleKeyDown}
+          use:init
+        />
     {:else}
       <h1 class='flex-grow text-slate-300 text-lg'>{task.title}</h1>
     {/if}
 
     <button 
-      class='flex-shrink-0 ml-12 w-6 h-6 bg-green-400 rounded-md flex flex-row justify-center items-center hover:animate-grow'
-      style:visibility={((hovering || editing) && !task.completed) ? 'visible' : 'hidden'}
+      class='flex-shrink-0 ml-12 w-6 h-6 bg-blue-300 rounded-md flex flex-row justify-center items-center hover:animate-grow'
+      style:visibility={((hovering || editing || showReminderModal) && !task.completed) ? 'visible' : 'hidden'}
       on:click={handleNewSubtaskClick}
     >
       ➕
     </button>
 
+    <ReminderButton 
+      visible={(hovering || editing || showReminderModal) && !task.completed}
+      parentTask={task}
+      bind:showReminderModal
+    />
+
     <button 
       class='flex-shrink-0 ml-1 w-6 h-6 bg-blue-300 rounded-md flex flex-row justify-center items-center hover:animate-grow'
-      style:visibility={((hovering || editing) && !task.completed) ? 'visible' : 'hidden'}
+      style:visibility={((hovering || editing || showReminderModal) && !task.completed) ? 'visible' : 'hidden'}
       on:click={() => editing = !editing}
     >
       ✏️
@@ -135,7 +143,7 @@
 
     <button 
       class='flex-shrink-0 mx-1 w-6 h-6 bg-red-600 rounded-md flex flex-row justify-center items-center hover:animate-wiggle'
-      style:visibility={(hovering || editing) ? 'visible' : 'hidden'}
+      style:visibility={(hovering || editing || showReminderModal) ? 'visible' : 'hidden'}
       on:click={handleDeleteClick}
     >
       <img class='w-4 h-4' src={xButtonImage} alt='Trash Button' />

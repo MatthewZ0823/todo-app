@@ -20,6 +20,7 @@
     "@sveltejs/vite-plugin-svelte": "^2.0.4",
     "autoprefixer": "^10.4.14",
     "concurrently": "^8.2.0",
+    "daisyui": "^3.1.9",
     "electron": "^25.2.0",
     "postcss": "^8.4.24",
     "svelte": "^3.58.0",
@@ -33,6 +34,7 @@
     "forge": "electron/forge.config.js"
   },
   "dependencies": {
+    "dayjs": "^1.11.9",
     "debug": "^4.3.4",
     "deepmerge": "^4.3.1",
     "electron-serve": "^1.1.0",

@@ -1,5 +1,7 @@
+import daisyui from "daisyui"
+
 export default {
-  plugins: [],
+  plugins: [daisyui],
     theme: {
     extend: {
       animation: {
