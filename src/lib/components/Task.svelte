@@ -3,9 +3,7 @@
   import { quintOut } from 'svelte/easing';
   import { allTasks } from "../stores.js";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
-  import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
   import Subtask from './Subtask.svelte';
-  import { v4 as uuidv4 } from 'uuid';
   import ReminderButton from './ReminderButton.svelte';
 
   export let task;
@@ -14,50 +12,25 @@
   let editing = false;
   let showReminderModal = false;
 
-  const completeTaskAudio = new Audio(completeTaskAudioFile);
-
   /**
    * Toggle the completed flag on the task with the same ID
    */
   const handleCompleteClick = () => {
-    allTasks.update((tasks) => {
-      return tasks.map(t => {
-        if (t.id === task.id) {
-          task.completed = !task.completed;
-          if (task.completed) completeTaskAudio.play();
-        }
-        return t;
-      });
-    });
+    allTasks.toggleTaskCompletion(task.id);
   };
 
   /**
    * Delete the task with the same ID
    */
   const handleDeleteClick = () => {
-    allTasks.update((tasks) => {
-      return tasks.filter(({ id }) => id !== task.id);
-    });
+    allTasks.deleteTask(task.id);
   };
 
   /**
    * Create a new subtask under this task
    */
   const handleNewSubtaskClick = () => {
-    allTasks.update((tasks) => {
-      return tasks.map(t => {
-        if (t.id === task.id) {
-          t.subtasks.push({
-            title: 'New Subtask',
-            completed: false,
-            subtasks: [],
-            id: uuidv4()
-          });
-        }
-
-        return t;
-      });
-    });
+    allTasks.createNewSubtask(task.id);
   };
 
   /**
@@ -68,6 +41,10 @@
       editing = false;
     }
   };
+
+  const handleInputChange = () => {
+    allTasks.renameTask(task.id, task.title);
+  }
   
   /**
    * Focus the input element on creation
@@ -113,6 +90,7 @@
           type='text' 
           bind:value={task.title}
           on:keydown={handleKeyDown}
+          on:change={handleInputChange}
           use:init
         />
     {:else}

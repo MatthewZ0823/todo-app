@@ -15,39 +15,14 @@
    * Toggle the completed flag on the correct subtask
    */
   const handleCompleteClick = () => {
-    allTasks.update((parentTasks) => {
-      return parentTasks.map(parentTask => {
-        // First find the right parent task
-        if (parentTask.id === parentId) {
-          parentTask.subtasks.forEach(t => {
-            // Then find the right subtask in that parent
-            if (t.id === subtask.id) {
-              t.completed = !t.completed;
-              if (t.completed) completeTaskAudio.play();
-            }
-          });
-        }
-
-        return parentTask;
-      });
-    });
+    allTasks.toggleSubtaskCompletion(parentId, subtask.id); 
   };
 
   /**
    * Delete the subtask with the same id and parent
    */
   const handleDeleteClick = () => {
-    allTasks.update((parentTasks) => {
-      return parentTasks.map(parentTask => {
-        // First find the right parent task
-        if (parentTask.id === parentId) {
-          // Then filter out the deleted task
-          parentTask.subtasks = parentTask.subtasks.filter(t => t.id !== subtask.id);
-        }
-
-        return parentTask;
-      });
-    });
+    allTasks.deleteSubtask(parentId, subtask.id);
   };
 
   /**

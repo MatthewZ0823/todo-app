@@ -15,36 +15,14 @@
   const handleAddReminderClick = () => {
     if (dateInput === undefined) return;
 
-    allTasks.update(tasks => {
-      return tasks.map(t => {
-        if (t.id === parentTask.id) {
-          if ('reminderDates' in t) {
-            // @ts-ignore be like me, just ignore errors
-            t.reminderDates.push(dayjs(dateInput).toDate());
-          } else {
-            t.reminderDates = [dayjs(dateInput).toDate()];
-          }
-        }
-        return t;
-      });
-    });
+    allTasks.addReminderToTask(parentTask.id, dateInput);
   }
 
   /**
    * Remove a date from the reminder dates array
    */
   const handleDeleteReminderClick = (deletedDate) => {
-    allTasks.update(tasks => {
-      return tasks.map(t => {
-        if (t.id === parentTask.id) {
-          const index = t.reminderDates.indexOf(deletedDate);
-          if (index > -1) { // only splice array when item is found
-            t.reminderDates.splice(index, 1); // 2nd parameter means remove one item only
-          }
-        }
-        return t;
-      });
-    });
+    allTasks.deleteReminderFromTask(parentTask.id, deletedDate);
   }
   
   const handleKeydown = (event) => {

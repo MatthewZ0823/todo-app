@@ -3,7 +3,6 @@
   import { allTasks } from '../stores';
   import { getTextWidth, getCanvasFont, clip } from '../utils.js';
   import plusButtonImage from '../../assets/imgs/plus-symbol-button.svg';
-  import { v4 as uuidv4 } from 'uuid';
 
   let input = '';
   let inputWidth;
@@ -15,14 +14,7 @@
   const handleClick = () => {
     if (input === '') return;
 
-    allTasks.update((tasks) => {
-      return [...tasks, {
-        title: input,
-        completed: false,
-        subtasks: [],
-        id: uuidv4()
-      }];
-    });
+    allTasks.createNewTask(input);
 
     input = '';
   }

@@ -9,7 +9,7 @@
 
   onMount(async () => {
     // @ts-ignore
-    allTasks.set(await window.electronAPI.readTodos());
+    allTasks.setFromSaved(await window.electronAPI.readTodos());
     loaded = true;
   })
 
