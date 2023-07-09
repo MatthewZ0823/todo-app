@@ -1,12 +1,13 @@
 import { writable } from "svelte/store";
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from "dayjs";
-import completeTaskAudioFile from '../assets/audio/complete-task.wav';
+import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
 
 const completeTaskAudio = new Audio(completeTaskAudioFile);
 
 const createAllTasks = () => {
-  const { subscribe, set, update } = writable([]);
+  const store = writable([]);
+  const { subscribe, set, update } = store;
   
   const createNewTask = (title) => {
     update((tasks) => {
@@ -23,11 +24,19 @@ const createAllTasks = () => {
     update(tasks => {
       return tasks.map(t => {
         if (t.id === taskId) {
-          if ('reminderDates' in t) {
+          if ('reminders' in t) {
             // @ts-ignore be like me, just ignore errors
-            t.reminderDates.push(dayjs(date).toDate());
+            t.reminders.push({
+              date: dayjs(date).toDate(),
+              triggered: false,
+              id: uuidv4()
+            });
           } else {
-            t.reminderDates = [dayjs(date).toDate()];
+            t.reminders = [{
+              date: dayjs(date).toDate(),
+              triggered: false,
+              id: uuidv4()
+            }];
           }
         }
         return t;
@@ -35,13 +44,13 @@ const createAllTasks = () => {
     });
   };
 
-  const deleteReminderFromTask = (taskId, date) => {
+  const deleteReminderFromTask = (taskId, reminderId) => {
     update(tasks => {
       return tasks.map(t => {
         if (t.id === taskId) {
-          const index = t.reminderDates.indexOf(date);
+          const index = t.reminders.findIndex(reminder => reminder.id === reminderId);
           if (index > -1) { // only splice array when item is found
-            t.reminderDates.splice(index, 1); // 2nd parameter means remove one item only
+            t.reminders.splice(index, 1); // 2nd parameter means remove one item only
           }
         }
         return t;
@@ -127,6 +136,22 @@ const createAllTasks = () => {
     });
   };
 
+  const toggleReminderTrigger = (taskId, reminderId) => {
+    update((tasks) => {
+      return tasks.map(t => {
+        if (t.id === taskId) {
+          t.reminders.forEach(reminder => {
+            if (reminder.id === reminderId) {
+              reminder.triggered = !reminder.triggered;
+            }
+          });
+        }
+
+        return t;
+      });
+    });
+  };
+
   return {
     subscribe,
     setFromSaved: (val) => set(val),
@@ -138,7 +163,8 @@ const createAllTasks = () => {
     toggleSubtaskCompletion,
     deleteTask,
     deleteSubtask,
-    renameTask
+    renameTask,
+    toggleReminderTrigger
   }
 }
 

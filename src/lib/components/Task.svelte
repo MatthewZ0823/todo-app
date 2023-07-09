@@ -1,7 +1,7 @@
 <script>
   import { crossfade } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
-  import { allTasks } from "../stores.js";
+  import { allTasks } from "../stores/tasks.js";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
   import Subtask from './Subtask.svelte';
   import ReminderButton from './ReminderButton.svelte';

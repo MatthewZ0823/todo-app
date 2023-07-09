@@ -1,6 +1,6 @@
 <script>
   import { tweened } from 'svelte/motion';
-  import { allTasks } from '../stores';
+  import { allTasks } from '../stores/tasks';
   import { getTextWidth, getCanvasFont, clip } from '../utils.js';
   import plusButtonImage from '../../assets/imgs/plus-symbol-button.svg';
 

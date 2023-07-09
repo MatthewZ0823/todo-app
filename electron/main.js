@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
 const path = require('path');
 const Store = require('./store.js');
+const Notifications = require('./notifications.js');
 
 const store = new Store({
   configName: 'todo-list',
@@ -28,6 +29,8 @@ const createWindow = () => {
   ipcMain.on('write-todos', (_event, todoList) => {
     store.set('todos', todoList);
   });
+
+  ipcMain.on('send-reminder-notification', (_event, reminder) => Notifications.showReminderNotification(reminder));
 
   ipcMain.handle('read-todos', handleReadTodos);
 

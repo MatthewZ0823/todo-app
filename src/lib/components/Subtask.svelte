@@ -1,15 +1,12 @@
 <script>
-  import { allTasks } from "../stores.js";
+  import { allTasks } from "../stores/tasks.js";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
-  import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
-
+  
   export let subtask;
   export let parentId;
 
   let hovering = false;
   let editing = false;
-
-  const completeTaskAudio = new Audio(completeTaskAudioFile);
 
   /**
    * Toggle the completed flag on the correct subtask

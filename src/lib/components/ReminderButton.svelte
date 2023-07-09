@@ -1,5 +1,5 @@
 <script>
-  import { allTasks } from "../stores";
+  import { allTasks } from "../stores/tasks";
   import { clickOutside } from "../utils";
   import dayjs from "dayjs";
 
@@ -14,15 +14,15 @@
    */
   const handleAddReminderClick = () => {
     if (dateInput === undefined) return;
-
+    
     allTasks.addReminderToTask(parentTask.id, dateInput);
   }
 
   /**
    * Remove a date from the reminder dates array
    */
-  const handleDeleteReminderClick = (deletedDate) => {
-    allTasks.deleteReminderFromTask(parentTask.id, deletedDate);
+  const handleDeleteReminderClick = (reminderId) => {
+    allTasks.deleteReminderFromTask(parentTask.id, reminderId);
   }
   
   const handleKeydown = (event) => {
@@ -62,26 +62,26 @@
           <div class='flex flex-col flex-grow basis-0'>
             <h3 class='mb-2 font-bold'>Existing Reminders:</h3>
             <div class='bg-[#141518] rounded-md h-20 overflow-y-scroll overflow-x-hidden self-center'>
-              <!-- Check if there are no reminder dates -->
-              {#if !parentTask.reminderDates || parentTask.reminderDates.length === 0}
+              <!-- Check if there are no reminders -->
+              {#if !parentTask.reminders || parentTask.reminders.length === 0}
                 <p class='mx-4 my-4'>Currently Empty... <br> ← Add a new reminder!</p>
               {/if}
 
               <!-- Render each reminder (if they exist) -->
-              {#each (parentTask.reminderDates || []) as date, i}
+              {#each (parentTask.reminders || []) as reminder, i}
                 <div 
                   class='flex flex-row items-center'
                   class:first={i === 0}
-                  class:last={i === parentTask.reminderDates.length - 1}
+                  class:last={i === parentTask.reminders.length - 1}
                 >
                   <p class='px-4 flex-grow'>
-                    {dayjs(date).format('[⏰] YYYY-MM-DD hh:mm A')}
+                    {dayjs(reminder.date).format('[⏰] YYYY-MM-DD hh:mm A')}
                   </p>
-                  <button class='btn btn-circle btn-sm flex-shrink-0 mr-6' on:click={() => handleDeleteReminderClick(date)}>✕</button>
+                  <button class='btn btn-circle btn-sm flex-shrink-0 mr-6' on:click={() => handleDeleteReminderClick(reminder.id)}>✕</button>
                 </div>
 
                 <!-- Render a divider for every element but the last -->
-                {#if i !== parentTask.reminderDates.length - 1}
+                {#if i !== parentTask.reminders.length - 1}
                   <div class='divider'></div>
                 {/if}
               {/each}
