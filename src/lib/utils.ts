@@ -1,4 +1,7 @@
-// @ts-nocheck
+type GetTextWidthFunc = {
+  (text: string, font: string): number;
+  canvas: HTMLCanvasElement;
+}
 
 /**
   * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
@@ -8,14 +11,14 @@
   * 
   * @see https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
   */
-export function getTextWidth(text, font) {
+export const getTextWidth = <GetTextWidthFunc>((text, font) => {
   // re-use canvas object for better performance
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
   const context = canvas.getContext("2d");
   context.font = font;
   const metrics = context.measureText(text);
   return metrics.width;
-}
+});
 
 function getCssStyle(element, prop) {
     return window.getComputedStyle(element, null).getPropertyValue(prop);

@@ -1,14 +1,14 @@
-<script>
+<script lang='ts'>
   import { flip } from 'svelte/animate';
   import NewTaskInput from "./lib/components/NewTaskInput.svelte";
   import Task from "./lib/components/Task.svelte";
   import { allTasks } from "./lib/stores/tasks";
-  import { reminders } from './lib/stores/reminders';
+  import { reminders } from "./lib/stores/reminders";
   import { onMount } from 'svelte';
   import dayjs from 'dayjs';
 
   let loaded = false;
-  let reminderIntervalId;
+  let reminderIntervalId: NodeJS.Timer;
 
   onMount(async () => {
     // @ts-ignore

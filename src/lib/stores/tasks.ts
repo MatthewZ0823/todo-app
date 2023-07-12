@@ -1,15 +1,16 @@
 import { writable } from "svelte/store";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import dayjs from "dayjs";
 import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
+import type { Task } from '../../../types';
 
 const completeTaskAudio = new Audio(completeTaskAudioFile);
 
 const createAllTasks = () => {
-  const store = writable([]);
+  const store = writable([] as Task[]);
   const { subscribe, set, update } = store;
   
-  const createNewTask = (title) => {
+  const createNewTask = (title: string) => {
     update((tasks) => {
       return [...tasks, {
         title,
@@ -20,20 +21,22 @@ const createAllTasks = () => {
     });
   };
 
-  const addReminderToTask = (taskId, date) => {
+  const addReminderToTask = (taskId: string, date: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+    
     update(tasks => {
       return tasks.map(t => {
         if (t.id === taskId) {
           if ('reminders' in t) {
             // @ts-ignore be like me, just ignore errors
             t.reminders.push({
-              date: dayjs(date).toDate(),
+              date: dayjs(date).toDate().toISOString(),
               triggered: false,
               id: uuidv4()
             });
           } else {
             t.reminders = [{
-              date: dayjs(date).toDate(),
+              date: dayjs(date).toDate().toISOString(),
               triggered: false,
               id: uuidv4()
             }];
@@ -44,7 +47,10 @@ const createAllTasks = () => {
     });
   };
 
-  const deleteReminderFromTask = (taskId, reminderId) => {
+  const deleteReminderFromTask = (taskId: string, reminderId: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+    if (!uuidValidate(reminderId)) throw new Error('Invalid Reminder ID');
+
     update(tasks => {
       return tasks.map(t => {
         if (t.id === taskId) {
@@ -58,7 +64,9 @@ const createAllTasks = () => {
     });
   };
 
-  const toggleTaskCompletion = (taskId) => {
+  const toggleTaskCompletion = (taskId: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+
     update((tasks) => {
       return tasks.map(t => {
         if (t.id === taskId) {
@@ -70,13 +78,17 @@ const createAllTasks = () => {
     });
   };
 
-  const deleteTask = (taskId) => {
+  const deleteTask = (taskId: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+
     update((tasks) => {
       return tasks.filter(({ id }) => id !== taskId);
     });
   };
 
-  const createNewSubtask = (taskId) => {
+  const createNewSubtask = (taskId: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+
     update((tasks) => {
       return tasks.map(t => {
         if (t.id === taskId) {
@@ -91,7 +103,10 @@ const createAllTasks = () => {
     });
   };
 
-  const toggleSubtaskCompletion = (parentTaskId, subtaskId) => {
+  const toggleSubtaskCompletion = (parentTaskId: string, subtaskId: string) => {
+    if (!uuidValidate(parentTaskId)) throw new Error('Invalid Parent Task ID');
+    if (!uuidValidate(subtaskId)) throw new Error('Invalid Subtask ID');
+
     update((parentTasks) => {
       return parentTasks.map(parentTask => {
         // First find the right parent task
@@ -110,7 +125,10 @@ const createAllTasks = () => {
     });
   };
 
-  const deleteSubtask = (parentTaskId, subtaskId) => {
+  const deleteSubtask = (parentTaskId: string, subtaskId: string) => {
+    if (!uuidValidate(parentTaskId)) throw new Error('Invalid Parent Task ID');
+    if (!uuidValidate(subtaskId)) throw new Error('Invalid Subtask ID');
+
     update((parentTasks) => {
       return parentTasks.map(parentTask => {
         // First find the right parent task
@@ -124,7 +142,9 @@ const createAllTasks = () => {
     });
   };
 
-  const renameTask = (taskId, title) => {
+  const renameTask = (taskId: string, title: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+
     update((tasks) => {
       return tasks.map(t => {
         if (t.id === taskId) {
@@ -136,7 +156,9 @@ const createAllTasks = () => {
     });
   };
 
-  const toggleReminderTrigger = (taskId, reminderId) => {
+  const toggleReminderTrigger = (taskId: string, reminderId: string) => {
+    if (!uuidValidate(taskId)) throw new Error('Invalid Task ID');
+
     update((tasks) => {
       return tasks.map(t => {
         if (t.id === taskId) {

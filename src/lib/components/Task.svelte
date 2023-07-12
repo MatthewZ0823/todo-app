@@ -1,12 +1,13 @@
-<script>
+<script lang='ts'>
   import { crossfade } from 'svelte/transition';
   import { quintOut } from 'svelte/easing';
-  import { allTasks } from "../stores/tasks.js";
+  import { allTasks } from "../stores/tasks";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
   import Subtask from './Subtask.svelte';
   import ReminderButton from './ReminderButton.svelte';
+  import type { Task } from '../../../types';
 
-  export let task;
+  export let task: Task;
 
   let hovering = false;
   let editing = false;
@@ -49,7 +50,7 @@
   /**
    * Focus the input element on creation
    */
-  const init = (el) => {
+  const init = (el: HTMLInputElement) => {
     el.focus();
   };
 

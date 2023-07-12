@@ -1,13 +1,14 @@
-<script>
+<script lang='ts'>
   import { allTasks } from "../stores/tasks";
   import { clickOutside } from "../utils";
   import dayjs from "dayjs";
+  import type { Task } from "../../../types";
 
   export let visible = true;
-  export let parentTask;
+  export let parentTask: Task;
   export let showReminderModal = false;
 
-  let dateInput;
+  let dateInput: string | undefined;
 
   /**
    * Add the current value in the date input to the reminder dates array
@@ -21,11 +22,11 @@
   /**
    * Remove a date from the reminder dates array
    */
-  const handleDeleteReminderClick = (reminderId) => {
+  const handleDeleteReminderClick = (reminderId: string) => {
     allTasks.deleteReminderFromTask(parentTask.id, reminderId);
   }
   
-  const handleKeydown = (event) => {
+  const handleKeydown = (event: KeyboardEvent) => {
     if (event.code === 'Escape') {
       showReminderModal = false;
     }
@@ -33,11 +34,7 @@
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
-<div 
-  class='relative flex-shrink-0 ml-1' 
-  use:clickOutside 
-  on:outclick={() => { showReminderModal = false }}
->
+<div class='relative flex-shrink-0 ml-1'>
   <button
     class='w-6 h-6 bg-blue-300 rounded-md flex flex-row justify-center items-center hover:animate-grow'
     style:visibility={visible ? 'visible' : 'hidden'}
@@ -48,8 +45,14 @@
   
   {#if (showReminderModal && visible)}
     <dialog class='modal modal-open w-60'>
-      <form method='dialog' class='modal-box !max-w-2xl' id='modal'>
-        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" on:click={() => showReminderModal = false}>✕</button>
+      <form 
+        method='dialog' 
+        class='modal-box !max-w-2xl' 
+        id='modal'
+        use:clickOutside 
+        on:outclick={() => { showReminderModal = false }}
+      >
+        <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" on:click|preventDefault={() => showReminderModal = false}>✕</button>
         <div class='w-full flex flex-col md:flex-row mt-2'>
           <div class='flex flex-col flex-grow basis-0'>
             <h3 class='mb-2 font-bold'>Create New Reminder:</h3>

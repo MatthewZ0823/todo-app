@@ -1,9 +1,10 @@
-<script>
-  import { allTasks } from "../stores/tasks.js";
+<script lang='ts'>
+  import { allTasks } from "../stores/tasks";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
+  import type { Subtask } from "../../../types";
   
-  export let subtask;
-  export let parentId;
+  export let subtask: Subtask;
+  export let parentId: string;
 
   let hovering = false;
   let editing = false;

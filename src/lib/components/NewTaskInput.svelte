@@ -1,15 +1,15 @@
-<script>
+<script lang='ts'>
   import { tweened } from 'svelte/motion';
   import { allTasks } from '../stores/tasks';
-  import { getTextWidth, getCanvasFont, clip } from '../utils.js';
+  import { getTextWidth, getCanvasFont, clip } from '../utils';
   import plusButtonImage from '../../assets/imgs/plus-symbol-button.svg';
 
   let input = '';
-  let inputWidth;
-  let inputEl;
+  let inputWidth: number;
+  let inputEl: HTMLInputElement;
   let underlineOpacity = tweened(0.5, { duration: 75 });
   let underlineWidth = tweened(0, { duration: 100 });
-  let underlineEl;
+  let underlineEl: HTMLHRElement;
 
   const handleClick = () => {
     if (input === '') return;
@@ -19,11 +19,11 @@
     input = '';
   }
 
-  const handleKeyDown = ({ key }) => {
+  const handleKeyDown = ({ key }: { key: string }) => {
     if (key === 'Enter') handleClick();
   }
 
-  $: if (underlineEl) underlineEl.style.opacity = $underlineOpacity;
+  $: if (underlineEl) underlineEl.style.opacity = $underlineOpacity.toString();
   $: if (underlineEl) underlineEl.style.width = `${clip($underlineWidth + 15, 40, inputWidth)}px`;
   $: if (underlineEl) underlineWidth.set(getTextWidth(input, getCanvasFont(inputEl)));
 </script>

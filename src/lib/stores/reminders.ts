@@ -1,19 +1,18 @@
 import { derived } from "svelte/store";
 import { allTasks } from "./tasks";
 import { cloneDeep } from "lodash";
+import type { ReminderNotification } from "../../../types";
 
 export const reminders = derived(allTasks, ($allTasks) => {
-  let tasks = cloneDeep($allTasks);
-  const reminders = [];
+  const reminders: ReminderNotification[] = [];
 
   // Filter only the tasks with reminders
-  tasks = tasks.filter(task => {
+  $allTasks.filter(task => {
     if (!('reminders' in task)) return false;
     if (task.reminders.length === 0) return false;
     return true;
-  });
-
-  tasks.forEach(task => {
+  // Loop through the filtered tasks and push the reminders to to the reminders array
+  }).forEach(task => {
     task.reminders.forEach(reminder => [
       reminders.push({
         title: task.title,
