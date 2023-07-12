@@ -1,8 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
-const serve = require('electron-serve');
-const path = require('path');
-const Store = require('./store.js');
-const Notifications = require('./notifications.js');
+import { app, BrowserWindow, ipcMain } from 'electron';
+import { join } from 'path';
+import { Store } from './store';
+import { Notifications } from './notifications';
 
 const store = new Store({
   configName: 'todo-list',
@@ -11,7 +10,6 @@ const store = new Store({
   }
 });
 
-const loadURL = serve({ directory: '../renderer-process/dist' });
 
 const handleReadTodos = async () => {
   return store.get('todos');
@@ -22,7 +20,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: join(__dirname, 'preload.js')
     }
   });
 
@@ -39,9 +37,8 @@ const createWindow = () => {
     mainWindow.loadURL('http://localhost:8080/');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
-    loadURL(mainWindow);
+    mainWindow.loadFile(join(__dirname, '../../renderer-process/dist/index.html'));
   }
-  // loadURL(mainWindow);
 }
 
 app.whenReady().then(() => {

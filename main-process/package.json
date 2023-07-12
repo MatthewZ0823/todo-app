@@ -1,7 +1,8 @@
 {
-  "type": "commonjs",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "npm run build && electron ./dist/main.js"
   }
 }

@@ -1,11 +1,9 @@
-const { Notification } = require('electron')
+import { Notification } from 'electron';
 
-class Notifications {
+export class Notifications {
   static showReminderNotification(reminder) {
     new Notification({
       title: reminder.title
     }).show()
   }
 }
-
-module.exports = Notifications;
