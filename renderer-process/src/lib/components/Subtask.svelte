@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { allTasks } from "../stores/tasks";
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
-  import type { Subtask } from "../../../types";
+  import type { Subtask } from "~shared/types";
   
   export let subtask: Subtask;
   export let parentId: string;

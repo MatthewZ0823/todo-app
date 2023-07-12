@@ -5,7 +5,7 @@
   import xButtonImage from '../../assets/imgs/x-symbol-button.svg';
   import Subtask from './Subtask.svelte';
   import ReminderButton from './ReminderButton.svelte';
-  import type { Task } from '../../../types';
+  import type { Task } from '~shared/types';
 
   export let task: Task;
 

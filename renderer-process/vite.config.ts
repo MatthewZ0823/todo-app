@@ -10,5 +10,6 @@ export default defineConfig({
   },
   server: {
     port: 8080
-  }
+  },
+  cacheDir: "../node_modules/.vite"
 })

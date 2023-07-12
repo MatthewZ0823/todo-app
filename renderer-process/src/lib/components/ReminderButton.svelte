@@ -2,7 +2,7 @@
   import { allTasks } from "../stores/tasks";
   import { clickOutside } from "../utils";
   import dayjs from "dayjs";
-  import type { Task } from "../../../types";
+  import type { Task } from "~shared/types";
 
   export let visible = true;
   export let parentTask: Task;

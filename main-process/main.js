@@ -11,7 +11,7 @@ const store = new Store({
   }
 });
 
-const loadURL = serve({ directory: 'dist' });
+const loadURL = serve({ directory: '../renderer-process/dist' });
 
 const handleReadTodos = async () => {
   return store.get('todos');
@@ -41,6 +41,7 @@ const createWindow = () => {
   } else {
     loadURL(mainWindow);
   }
+  // loadURL(mainWindow);
 }
 
 app.whenReady().then(() => {

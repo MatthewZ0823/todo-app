@@ -2,13 +2,10 @@
   "name": "todo-app",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "start": "concurrently \"npm:dev\" \"wait-on --config wait-on.config.json http://localhost:8080 && electron .\"",
-    "make": "vite build && electron-forge make"
+    "electron-main-start": "cd main-process && npm run start",
+    "start": "concurrently \"cd renderer-process && npm run dev\" \"wait-on --config wait-on.config.json http://localhost:8080 && npm run electron-main-start",
+    "make": "cd renderer-process && vite build && cd .. && electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.2.1",
@@ -35,9 +32,8 @@
     "wait-on": "^7.0.1"
   },
   "description": "todo application",
-  "main": "electron/main.js",
   "config": {
-    "forge": "electron/forge.config.js"
+    "forge": "main-process/forge.config.js"
   },
   "dependencies": {
     "dayjs": "^1.11.9",
