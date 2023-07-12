@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import dayjs from "dayjs";
 import completeTaskAudioFile from '../../assets/audio/complete-task.wav';
-import type { Task } from '../../../types';
+import type { Task } from '~shared/types';
 
 const completeTaskAudio = new Audio(completeTaskAudioFile);
 
@@ -28,7 +28,6 @@ const createAllTasks = () => {
       return tasks.map(t => {
         if (t.id === taskId) {
           if ('reminders' in t) {
-            // @ts-ignore be like me, just ignore errors
             t.reminders.push({
               date: dayjs(date).toDate().toISOString(),
               triggered: false,

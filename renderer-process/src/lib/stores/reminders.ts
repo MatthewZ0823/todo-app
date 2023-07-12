@@ -1,7 +1,6 @@
 import { derived } from "svelte/store";
 import { allTasks } from "./tasks";
-import { cloneDeep } from "lodash";
-import type { ReminderNotification } from "../../../types";
+import type { ReminderNotification } from "~shared/types";
 
 export const reminders = derived(allTasks, ($allTasks) => {
   const reminders: ReminderNotification[] = [];

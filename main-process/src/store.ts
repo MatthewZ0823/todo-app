@@ -2,11 +2,16 @@ import { app } from 'electron';
 import { join } from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 
+type StoreOptions = {
+  configName: string;
+  defaults: any;
+}
+
 export class Store {
   data: any;
   path: string;
   
-  constructor(opts) {
+  constructor(opts: StoreOptions) {
     const userDataPath = app.getPath('userData');
 
     this.path = join(userDataPath, opts.configName + '.json');
@@ -14,12 +19,12 @@ export class Store {
   }
   
   // This will just return the property on the `data` object
-  get(key) {
+  get(key: string) {
     return this.data[key];
   }
   
   // ...and this will set it
-  set(key, val) {
+  set(key: string, val: any) {
     this.data[key] = val;
     // Wait, I thought using the node.js' synchronous APIs was bad form?
     // We're not writing a server so there's not nearly the same IO demand on the process
@@ -29,7 +34,7 @@ export class Store {
   }
 }
 
-function parseDataFile(filePath, defaults) {
+function parseDataFile(filePath: string, defaults: any) {
   // We'll try/catch it in case the file doesn't exist yet, which will be the case on the first application run.
   // `fs.readFileSync` will return a JSON string which we then parse into a Javascript object
   try {
