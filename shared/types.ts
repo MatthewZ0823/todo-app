@@ -25,3 +25,15 @@ export interface Task extends Subtask {
   reminders?: Reminder[];
   subtasks?: Subtask[];
 }
+
+export type AlertType = 'Error' | 'Reminder';
+
+export interface Alert {
+  type: AlertType;
+  message: string;
+  /** Length of time to display alert, in miliseconds */
+  durationMs: number;
+  id: string;
+  /** Any aditional payload */
+  payload?: any;
+}

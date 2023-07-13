@@ -1,11 +1,13 @@
-<script lang='ts'>
-  import { flip } from 'svelte/animate';
+<script lang='ts'> import { flip } from 'svelte/animate';
   import NewTaskInput from "./lib/components/NewTaskInput.svelte";
   import Task from "./lib/components/Task.svelte";
+  import AlertHandler from './lib/components/Alerts/AlertHandler.svelte';
   import { allTasks } from "./lib/stores/tasks";
   import { reminders } from "./lib/stores/reminders";
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import dayjs from 'dayjs';
+  import { alertsStore } from './lib/stores/alerts';
+    import ReminderMessage from './lib/components/Alerts/ReminderMessage.svelte';
 
   let loaded = false;
   let reminderIntervalId: NodeJS.Timer;
@@ -15,15 +17,21 @@
     allTasks.setFromSaved(await window.electronAPI.readTodos());
     loaded = true;
 
+    // Check if any of the reminders have passed every second
     reminderIntervalId = setInterval(() => {
       $reminders.forEach(reminder => {
         if (dayjs(reminder.date).isBefore(dayjs()) && !reminder.triggered) {
           // @ts-ignore
           window.electronAPI.sendReminderNotification(reminder);
+          alertsStore.createAlert('Reminder', reminder.title, 10000, { reminder });
           allTasks.toggleReminderTrigger(reminder.taskId, reminder.id);
         }
       });
     }, 1000);
+  });
+
+  onDestroy(() => {
+    clearInterval(reminderIntervalId);
   });
 
   $: completedTasks = $allTasks.filter(task => task.completed);
@@ -59,3 +67,5 @@
     />
   </div>
 {/each}
+
+<AlertHandler />
