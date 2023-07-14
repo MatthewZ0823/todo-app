@@ -1,9 +1,7 @@
-import { app, BrowserWindow, ipcMain, nativeImage, Tray, Menu } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path';
 import { Store } from './store';
 import { Notifications } from './notifications';
-
-let tray;
 
 const store = new Store({
   configName: 'todo-list',
@@ -11,6 +9,11 @@ const store = new Store({
     todos: []
   }
 });
+
+// Handle creating/removing shortcuts on Windows when installing/uninstalling
+if (require('electron-squirrel-startup')) {
+  app.quit();
+}
 
 const handleReadTodos = async () => {
   return store.get('todos');

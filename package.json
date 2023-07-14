@@ -37,6 +37,9 @@
     "wait-on": "^7.0.1"
   },
   "description": "todo application",
+  "config": {
+    "forge": "main-process/forge.config.js"
+  },
   "dependencies": {
     "dayjs": "^1.11.9",
     "debug": "^4.3.4",
