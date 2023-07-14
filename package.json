@@ -2,12 +2,12 @@
   "name": "todo-app",
   "private": true,
   "version": "0.0.0",
-  "main": "main-process/dist/main.js",
+  "main": "main-process/dist/main-process/src/main.js",
   "scripts": {
     "electron-main-start": "cd main-process && npm run start",
+    "electron-main-build": "cd main-process && npm run build",
     "start": "concurrently \"cd renderer-process && npm run dev\" \"wait-on --config wait-on.config.json http://localhost:8080 && npm run electron-main-start",
-    "make": "cd renderer-process && vite build && cd .. && electron-forge make",
-    "foo": "cd main-process && npm run start"
+    "make": "cd renderer-process && vite build && cd .. && npm run electron-main-build && electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.2.1",

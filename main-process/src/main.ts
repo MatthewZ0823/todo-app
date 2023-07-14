@@ -1,7 +1,9 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, nativeImage, Tray, Menu } from 'electron';
 import { join } from 'path';
 import { Store } from './store';
 import { Notifications } from './notifications';
+
+let tray;
 
 const store = new Store({
   configName: 'todo-list',
@@ -9,7 +11,6 @@ const store = new Store({
     todos: []
   }
 });
-
 
 const handleReadTodos = async () => {
   return store.get('todos');
@@ -21,9 +22,10 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: join(__dirname, 'preload.js')
-    }
+    },
+    icon: join(__dirname, '../../../assets/app-icon.png')
   });
-
+  
   ipcMain.on('write-todos', (_event, todoList) => {
     store.set('todos', todoList);
   });
@@ -37,7 +39,7 @@ const createWindow = () => {
     mainWindow.loadURL('http://localhost:8080/');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
   } else {
-    mainWindow.loadFile(join(__dirname, '../../renderer-process/dist/index.html'));
+    mainWindow.loadFile(join(__dirname, '../../../../renderer-process/dist/index.html'));
   }
 }
 

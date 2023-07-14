@@ -1,8 +1,7 @@
 {
-  "main": "main.js",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "npm run build && electron ./dist/main-process/src/main.js"
   }
 }
