@@ -50,9 +50,10 @@
     on:outclick={onClose}
   >
     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" on:click|preventDefault={onClose}>✕</button>
+    <h1 class='text-lg font-bold mb-6 text-center'>{ `${parentTask.title}:` }</h1>
     <div class='w-full flex flex-col md:flex-row mt-2'>
       <div class='flex flex-col flex-grow basis-0'>
-        <h3 class='mb-2 font-bold'>Create New Reminder:</h3>
+        <h3 class='mb-2 font-bold text-gray-300'>Create New Reminder:</h3>
         <div class='flex flex-row items-center h-full justify-center'>
           <input class='bg-[#141518] p-4 rounded-md self-center flex-grow-0 focus:outline-none' type='datetime-local' bind:value={dateInput} />
           <button class='btn btn-primary btn-sm btn-circle ml-2' on:click={handleAddReminderClick}>＋</button>
@@ -60,7 +61,7 @@
       </div>
       <div class='divider divider-vertical md:divider-horizontal flex-grow-0 flex-shrink-0'></div>
       <div class='flex flex-col flex-grow basis-0'>
-        <h3 class='mb-2 font-bold'>Existing Reminders:</h3>
+        <h3 class='mb-2 font-bold text-gray-300'>Existing Reminders:</h3>
         <div class='w-full max-w-xs bg-[#141518] rounded-md h-20 overflow-y-scroll overflow-x-hidden self-center'>
           <!-- Check if there are no reminders -->
           {#if !parentTask.reminders || parentTask.reminders.length === 0}
